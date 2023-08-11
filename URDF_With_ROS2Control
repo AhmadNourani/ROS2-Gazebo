@@ -16,7 +16,7 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL0.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL0.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -26,7 +26,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL0.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL0.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL0.STL" />
             </geometry>
         </collision>
     </link>
@@ -55,7 +55,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL0.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL1.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL1.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -66,7 +66,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL1.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL1.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL1.STL" />
             </geometry>
         </collision>
     </link>
@@ -97,7 +97,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL1.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL2.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL2.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -108,7 +108,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL2.STL" />
 
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL2.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL2.STL" />
             </geometry>
         </collision>
     </link>
@@ -139,7 +139,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL2.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL3.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL3.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -149,7 +149,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL3.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL3.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL3.STL" />
 
             </geometry>
         </collision>
@@ -181,7 +181,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL3.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL4.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL4.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -191,7 +191,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL4.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL4.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL4.STL" />
             </geometry>
         </collision>
     </link>
@@ -223,7 +223,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL4.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL5.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL5.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -233,7 +233,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL5.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-            filename="/home/izan/my_ws/src/urdf_example/meshes/6RL5.STL" />
+            filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL5.STL" />
             </geometry>
         </collision>
     </link>
@@ -265,7 +265,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL5.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL6.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL6.STL" />
             </geometry>
             <material name="">
                 <color rgba="0.89804 0.91765 0.92941 1" />
@@ -275,7 +275,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL6.STL" />
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
                 <mesh
-filename="/home/izan/my_ws/src/urdf_example/meshes/6RL6.STL" />
+filename="/home/ahmad/my_ws/src/urdf_example/meshes/6RL6.STL" />
             </geometry>
         </collision>
     </link>
@@ -315,7 +315,7 @@ filename="/home/izan/my_ws/src/urdf_example/meshes/6RL6.STL" />
 <gazebo>
     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
         <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
-        <parameters>/home/izan/my_ws/src/urdf_example/config/jtc.yaml</parameters>
+        <parameters>/home/ahmad/my_ws/src/urdf_example/config/jtc.yaml</parameters>
     </plugin>
   </gazebo>
   <ros2_control name="GazeboSystem" type="system">
