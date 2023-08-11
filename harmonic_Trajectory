@@ -1,0 +1,28 @@
+import numpy as np
+
+def generate_harmonic_trajectory(duration, frequency, amplitude):
+    timesteps = np.linspace(0, duration, num=1000)
+    
+    # Generate harmonic motions for each joint
+    joint_trajectories = []
+    for dof in range(6):
+        phase_shift = dof * np.pi / 3  # Phase shift for each joint
+        joint_trajectory = amplitude * np.sin(2 * np.pi * frequency * timesteps + phase_shift)
+        joint_trajectories.append(joint_trajectory)
+    
+    # Stack joint trajectories to form the full trajectory
+    trajectory = np.vstack(joint_trajectories).T
+    
+    return trajectory
+
+# Parameters
+duration = 10.0  # seconds
+frequency = 0.5  # Hz
+amplitude = np.pi / 4  # radians
+
+# Generate the harmonic trajectory
+trajectory = generate_harmonic_trajectory(duration, frequency, amplitude)
+
+# Print the trajectory
+print("Generated Harmonic Trajectory:")
+print(trajectory)
