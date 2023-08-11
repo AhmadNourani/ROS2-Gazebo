@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def generate_cycloidal_trajectory(duration, frequency, amplitude):
     timesteps = np.linspace(0, duration, num=1000)
@@ -7,7 +8,9 @@ def generate_cycloidal_trajectory(duration, frequency, amplitude):
     joint_trajectories = []
     for dof in range(6):
         phase_shift = dof * np.pi / 3  # Phase shift for each joint
-        joint_trajectory = amplitude * np.arcsin(np.sin(2 * np.pi * frequency * timesteps + phase_shift))
+        
+        # Generate a cycloidal trajectory for the current joint
+        joint_trajectory = amplitude * (timesteps / duration - 0.5 * np.sin(2 * np.pi * frequency * timesteps + phase_shift) + 0.5)
         joint_trajectories.append(joint_trajectory)
     
     # Stack joint trajectories to form the full trajectory
@@ -23,6 +26,16 @@ amplitude = np.pi / 4  # radians
 # Generate the cycloidal trajectory
 trajectory = generate_cycloidal_trajectory(duration, frequency, amplitude)
 
-# Print the trajectory
-print("Generated Cycloidal Trajectory:")
-print(trajectory)
+# Print the shape of the trajectory array
+print("Generated Cycloidal Trajectory Shape:", trajectory.shape)
+
+# Plot the trajectories for each joint
+plt.figure(figsize=(10, 6))
+for dof in range(6):
+    plt.plot(trajectory[:, dof], label=f"Joint {dof + 1}")
+plt.title("Cycloidal Trajectory for a 6-DOF Robot")
+plt.xlabel("Time Step")
+plt.ylabel("Joint Angle (radians)")
+plt.legend()
+plt.grid(True)
+plt.show()
