@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def generate_harmonic_trajectory(duration, frequency, amplitude):
     timesteps = np.linspace(0, duration, num=1000)
@@ -7,6 +8,8 @@ def generate_harmonic_trajectory(duration, frequency, amplitude):
     joint_trajectories = []
     for dof in range(6):
         phase_shift = dof * np.pi / 3  # Phase shift for each joint
+        
+        # Generate a harmonic trajectory for the current joint
         joint_trajectory = amplitude * np.sin(2 * np.pi * frequency * timesteps + phase_shift)
         joint_trajectories.append(joint_trajectory)
     
@@ -16,13 +19,23 @@ def generate_harmonic_trajectory(duration, frequency, amplitude):
     return trajectory
 
 # Parameters
-duration = 10.0  # seconds
-frequency = 0.5  # Hz
-amplitude = np.pi / 4  # radians
+duration = 20.0  # seconds
+frequency = 0.25  # Hz
+amplitude = np.pi / 8  # radians
 
 # Generate the harmonic trajectory
 trajectory = generate_harmonic_trajectory(duration, frequency, amplitude)
 
-# Print the trajectory
-print("Generated Harmonic Trajectory:")
-print(trajectory)
+# Print the shape of the trajectory array
+print("Generated Harmonic Trajectory Shape:", trajectory.shape)
+
+# Plot the trajectories for each joint
+plt.figure(figsize=(10, 6))
+for dof in range(6):
+    plt.plot(trajectory[:, dof], label=f"Joint {dof + 1}")
+plt.title("Harmonic Trajectory for a 6-DOF Robot")
+plt.xlabel("Time Step")
+plt.ylabel("Joint Angle (radians)")
+plt.legend()
+plt.grid(True)
+plt.show()
