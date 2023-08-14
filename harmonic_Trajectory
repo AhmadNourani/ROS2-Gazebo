@@ -9,11 +9,11 @@ def generate_harmonic_trajectory(duration, frequency, amplitude):
     for dof in range(6):
         phase_shift = dof * np.pi / 3  # Phase shift for each joint
         
-        # Generate a harmonic trajectory for the current joint
+        
         joint_trajectory = amplitude * np.sin(2 * np.pi * frequency * timesteps + phase_shift)
         joint_trajectories.append(joint_trajectory)
     
-    # Stack joint trajectories to form the full trajectory
+    
     trajectory = np.vstack(joint_trajectories).T
     
     return trajectory
@@ -23,13 +23,13 @@ duration = 20.0  # seconds
 frequency = 0.25  # Hz
 amplitude = np.pi / 8  # radians
 
-# Generate the harmonic trajectory
+
 trajectory = generate_harmonic_trajectory(duration, frequency, amplitude)
 
 # Print the shape of the trajectory array
 print("Generated Harmonic Trajectory Shape:", trajectory.shape)
 
-# Plot the trajectories for each joint
+
 plt.figure(figsize=(10, 6))
 for dof in range(6):
     plt.plot(trajectory[:, dof], label=f"Joint {dof + 1}")
