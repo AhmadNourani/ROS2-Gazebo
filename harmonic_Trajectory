@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def generate_harmonic_trajectory(duration, frequency, amplitude):
     timesteps = np.linspace(0, duration, num=1000)
     
-    # Generate harmonic motions for each joint
+    
     joint_trajectories = []
     for dof in range(6):
         phase_shift = dof * np.pi / 3  # Phase shift for each joint
@@ -26,7 +26,7 @@ amplitude = np.pi / 8  # radians
 
 trajectory = generate_harmonic_trajectory(duration, frequency, amplitude)
 
-# Print the shape of the trajectory array
+
 print("Generated Harmonic Trajectory Shape:", trajectory.shape)
 
 
