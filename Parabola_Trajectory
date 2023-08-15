@@ -1,0 +1,386 @@
+# import libraries ............................................
+import sys
+import signal
+import time
+import math
+from tokenize import Double
+from typing import Counter
+
+from torque_message.srv import TRMsg
+import rclpy
+from rclpy.node import Node
+from decimal import *
+import csv
+import numpy as np
+
+#...........................................................
+
+getcontext().prec = 8
+
+
+class MinimalClientAsync(Node):
+    
+    def __init__(self):
+        super().__init__('minimal_client_async')
+        # create service and client to apply Torque
+        print("in calling service ")
+        self.step_call_cli = self.create_client(TRMsg, 'torque_step')
+        self.req = TRMsg.Request()
+        # time counter
+        self.counter = (0.0000)
+        self.dt = 0.001
+
+        #parabolic motion parameters
+        self.v0=0.0
+        self.v1=0.0
+        self.period = 2.000
+        self.tf=self.period/2
+        self.ta = self.period/2
+        self.tb = self.ta
+    
+        # PID controller parameters for theta1
+        self.Kp1 = 1000.00
+        self.Ki1 = 10.00
+        self.Kd1 = 100.00
+        self.error1 = 0.0
+        self.error_integral1 = 0.0
+        self.error_derivative1 = 0.0
+        self.prev_error1 = 0.0
+        
+        # PID controller parameters for theta2
+        self.Kp2 = 10000.00
+        self.Ki2 = 1.0
+        self.Kd2 = 100.0
+        self.error2 = 0.0
+        self.error_integral2 = 0.0
+        self.error_derivative2 = 0.0
+        self.prev_error2 = 0.0
+
+        # PID controller parameters for theta3
+        self.Kp3 = 1000.0
+        self.Ki3 = 10.0
+        self.Kd3 = 100.0
+        self.error3 = 0.0
+        self.error_integral3 = 0.0
+        self.error_derivative3 = 0.0
+        self.prev_error3 = 0.0
+
+        # PID controller parameters for theta4
+        self.Kp4 = 1000.0
+        self.Ki4 = 10.0
+        self.Kd4 = 100.0
+        self.error4 = 0.0
+        self.error_integral4 = 0.0
+        self.error_derivative4 = 0.0
+        self.prev_error4 = 0.0
+
+        # PID controller parameters for theta5
+        self.Kp5 = 100.0
+        self.Ki5 = 1.0
+        self.Kd5 = 10.0
+        self.error5 = 0.0
+        self.error_integral5 = 0.0
+        self.error_derivative5 = 0.0
+        self.prev_error5 = 0.0
+
+        # PID controller parameters for theta6
+        self.Kp6 = 100.0
+        self.Ki6 = 1.0
+        self.Kd6 = 10.0
+        self.error6 = 0.0
+        self.error_integral6 = 0.0
+        self.error_derivative6 = 0.0
+        self.prev_error6 = 0.0
+
+
+    # send request to Service for theta1
+    def send_request1(self):
+        
+        self.period1 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta1 = self.res.r1
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j1
+            theta1 = self.res.r1
+            print("in calling service  theta1 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta1)
+            self.q1_1 = 10.0
+            self.h1 = self.q1_1 - starttheta1
+            self.qf1 = (self.q1_1 + starttheta1)/2.0
+          
+            self.qa1 = starttheta1 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h1 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb1 = self.qf1 + ((2.0*self.h1 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h1) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d1=self.qa1
+            else:
+                theta_d1=self.qb1
+
+            self.prev_error1 = self.error1
+            self.error1 = theta_d1 - theta1
+            self.error_integral1 += ((self.error1+self.prev_error1)/2) * self.dt
+            self.error_derivative1 = (self.error1 - self.prev_error1) / self.dt
+            self.control_input1 = self.Kp1 * self.error1 + self.Ki1 * self.error_integral1 + self.Kd1 * self.error_derivative1
+            self.req.t1 = self.control_input1
+            self.counter += self.dt
+
+
+
+
+    # send request to Service for theta2
+    def send_request2(self):
+        
+        self.period2 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta2 = self.res.r2
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j2
+            theta2 = self.res.r2
+            print("in calling service  theta2 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta2)
+            self.q2_2 = 10.0
+            self.h2 = self.q2_2 - starttheta2
+            self.qf2 = (self.q2_2 + starttheta2)/2.0
+          
+            self.qa2 = starttheta2 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h2 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb2 = self.qf2 + ((2.0*self.h2 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h2) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d2=self.qa2
+            else:
+                theta_d2=self.qb2
+
+            self.prev_error2 = self.error2
+            self.error2 = theta_d2 - theta2
+            self.error_integral2 += ((self.error2+self.prev_error2)/2) * self.dt
+            self.error_derivative2 = (self.error2 - self.prev_error2) / self.dt
+            self.control_input2 = self.Kp2 * self.error2 + self.Ki2 * self.error_integral2 + self.Kd2 * self.error_derivative2
+            self.req.t2 = self.control_input2
+            self.counter += self.dt
+
+
+
+
+
+    # send request to Service for theta3
+    def send_request3(self):
+        
+        self.period3 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta3 = self.res.r3
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j3
+            theta3 = self.res.r3
+            print("in calling service  theta3 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta3)
+            self.q3_3 = 10.0
+            self.h3 = self.q3_3 - starttheta3
+            self.qf3 = (self.q3_3 + starttheta3)/2.0
+          
+            self.qa3 = starttheta3 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h3 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb3 = self.qf3 + ((2.0*self.h3 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h3) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d3=self.qa3
+            else:
+                theta_d3=self.qb3
+
+            self.prev_error3 = self.error3
+            self.error3 = theta_d3 - theta3
+            self.error_integral3 += ((self.error3+self.prev_error3)/2) * self.dt
+            self.error_derivative3 = (self.error3 - self.prev_error3) / self.dt
+            self.control_input3 = self.Kp3 * self.error3 + self.Ki3 * self.error_integral3 + self.Kd3 * self.error_derivative3
+            self.req.t3 = self.control_input3
+            self.counter += self.dt
+
+
+
+    # send request to Service for theta4
+    def send_request4(self):
+        
+        self.period4 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta4 = self.res.r4
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j4
+            theta4 = self.res.r4
+            print("in calling service  theta4 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta4)
+            self.q4_4 = 10.0
+            self.h4 = self.q4_4 - starttheta4
+            self.qf4 = (self.q4_4 + starttheta4)/2.0
+          
+            self.qa4 = starttheta4 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h4 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb4 = self.qf4 + ((2.0*self.h4 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h4) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d4=self.qa4
+            else:
+                theta_d4=self.qb4
+
+            self.prev_error4 = self.error4
+            self.error4 = theta_d4 - theta4
+            self.error_integral4 += ((self.error4+self.prev_error4)/2) * self.dt
+            self.error_derivative4 = (self.error4 - self.prev_error4) / self.dt
+            self.control_input4 = self.Kp4 * self.error4 + self.Ki4 * self.error_integral4 + self.Kd4 * self.error_derivative4
+            self.req.t4 = self.control_input4
+            self.counter += self.dt
+
+
+
+    # send request to Service for theta5
+    def send_request5(self):
+        
+        self.period5 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta5 = self.res.r5
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j5
+            theta5 = self.res.r5
+            print("in calling service  theta5 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta5)
+            self.q5_5 = 10.0
+            self.h5 = self.q5_5 - starttheta5
+            self.qf5 = (self.q5_5 + starttheta5)/2.0
+          
+            self.qa5 = starttheta5 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h5 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb5 = self.qf5 + ((2.0*self.h5 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h5) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d5=self.qa5
+            else:
+                theta_d5=self.qb5
+
+            self.prev_error5 = self.error5
+            self.error5 = theta_d5 - theta5
+            self.error_integral5 += ((self.error5+self.prev_error5)/2) * self.dt
+            self.error_derivative5 = (self.error5 - self.prev_error5) / self.dt
+            self.control_input5 = self.Kp5 * self.error5 + self.Ki5 * self.error_integral5 + self.Kd5 * self.error_derivative5
+            self.req.t5 = self.control_input5
+            self.counter += self.dt
+
+
+
+
+    # send request to Service for theta6
+    def send_request6(self):
+        
+        self.period6 = 2.000
+        self.counter=0.00
+
+        self.future_step = self.step_call_cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self,self.future_step)
+        self.res = self.future_step.result()
+        starttheta6 = self.res.r6
+        while self.counter <= (self.period):
+
+
+            self.future_step = self.step_call_cli.call_async(self.req)
+            rclpy.spin_until_future_complete(self,self.future_step)
+            self.res = self.future_step.result()
+
+            #pid control j6
+            theta6 = self.res.r6
+            print("in calling service  theta6 time=")
+            print (self.counter)
+            print("current angle joint =")
+            print (theta6)
+            self.q6_6 = 0.5
+            self.h6 = self.q6_6 - starttheta6
+            self.qf6 = (self.q6_6 + starttheta6)/2.0
+          
+            self.qa6 = starttheta6 +(self.v0) * (self.counter) +(2.0/(self.period**2.0))*(self.h6 - (self.v0 * self.period)) * (self.counter ** 2.0)
+            self.qb6 = self.qf6 + ((2.0*self.h6 / self.period) - self.v1) * (self.counter-self.tf) + (2.0 /(self.period ** 2.0))*(self.v1 * self.period - self.h6) * ((self.counter-self.tf) ** 2.0)
+            #theta_d1 = self.qa1 + self.qb1
+            if self.counter <= self.tf:
+                theta_d6=self.qa6
+            else:
+                theta_d6=self.qb6
+
+            self.prev_error6 = self.error6
+            self.error6 = theta_d6 - theta6
+            self.error_integral6 += ((self.error6+self.prev_error6)/2) * self.dt
+            self.error_derivative6 = (self.error6 - self.prev_error6) / self.dt
+            self.control_input6 = self.Kp6 * self.error6 + self.Ki6 * self.error_integral6 + self.Kd6 * self.error_derivative6
+            self.req.t6= self.control_input6
+            self.counter += self.dt
+
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    
+    minimal_client = MinimalClientAsync()
+    minimal_client.send_request1()
+    minimal_client.send_request2()
+    minimal_client.send_request3()
+    minimal_client.send_request4()
+    minimal_client.send_request5()
+    minimal_client.send_request6()
+    minimal_client.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
