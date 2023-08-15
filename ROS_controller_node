@@ -1,0 +1,139 @@
+import rclpy
+from rclpy.node import Node
+from builtin_interfaces.msg import Duration
+from trajectory_msgs.msg import JointTrajectory , JointTrajectoryPoint
+import numpy as np
+import sys
+import ikpy.chain
+import os
+from ament_index_python.packages import get_package_share_directory
+from sympy import symbols, cos, sin, pi, simplify, pprint, tan, expand_trig, sqrt, trigsimp, atan2
+from sympy.matrices import Matrix
+import math
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import time
+from sensor_msgs.msg import JointState
+from geometry_msgs.msg import PoseStamped, Point, Quaternion
+
+class Trajectory_publisher(Node):
+
+    def __init__(self):
+        super().__init__('trajectory_publsiher_node')
+        publish_topic = "/joint_trajectory_controller/joint_trajectory"
+        self.publisher_ = self.create_publisher(PoseStamped,'PoseStamped', 10)
+        self.subscription = self.create_subscription(
+            JointState,
+            'joint_states',
+            self.ik,
+            10)
+        self.trajectory_publihser = self.create_publisher(JointTrajectory,publish_topic, 10)
+
+        timer_period = 1
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.joints = ['6RJ1','6RJ2','6RJ3','6RJ4','6RJ5','6RJ6']
+        argv = sys.argv[1:]
+        self.argv=argv
+        self.goal_positions=[]
+
+
+
+        startxyz=(float(self.argv[0]),float(self.argv[1]),float(self.argv[2]))
+        #cartesian to joint space with inverse kinematics
+
+        self.pose_msg = PoseStamped()
+        self.pose_msg.header.frame_id = 'robot'
+        self.pose_msg.pose.position.x = float(self.argv[0])
+        self.pose_msg.pose.position.y = float(self.argv[1])
+        self.pose_msg.pose.position.z = float(self.argv[2])
+        self.publisher_.publish(self.pose_msg)
+
+
+
+
+
+
+    def ik(self, msg):
+
+
+        #reciving joints position
+        q1,q2,q3,q4,q5,q6 = msg.position[0],msg.position[1],msg.position[2],msg.position[3],msg.position[4],msg.position[5]
+        
+        startjoint=[float(q1),float(q2),float(q3),float(q4),float(q5),float(q6)]
+        print("first trajectory ",startjoint)
+        self.goal_positions=list(startjoint)
+        self.timer_callback()
+        endxyz=(float(self.argv[3]),float(self.argv[4]),float(self.argv[5]))
+        self.pose_msg.pose.position.x = float(self.argv[3])
+        self.pose_msg.pose.position.y = float(self.argv[4])
+        self.pose_msg.pose.position.z = float(self.argv[5])
+        self.publisher_.publish(self.pose_msg)
+        lq1,lq2,lq3,lq4,lq5,lq6 = msg.position[0],msg.position[1],msg.position[2],msg.position[3],msg.position[4],msg.position[5]
+
+        print("last point ",lq1,lq2,lq3,lq4,lq5,lq6)
+        timexyz=float(self.argv[6])
+        shomarande=0
+        while shomarande <= (timexyz):
+            xpose=((float(self.argv[3])-float(self.argv[0]))/timexyz)*shomarande+float(self.argv[0])
+            ypose=((float(self.argv[4])-float(self.argv[1]))/timexyz)*shomarande+float(self.argv[1])
+            zpose=((float(self.argv[5])-float(self.argv[2]))/timexyz)*shomarande+float(self.argv[2])
+
+            shomarande+=0.0015
+
+        
+            self.pose_msg.pose.position.x = float(float(xpose))
+            self.pose_msg.pose.position.y = float(float(ypose))
+            self.pose_msg.pose.position.z = float(float(zpose))
+            self.publisher_.publish(self.pose_msg)
+            plq1,plq2,plq3,plq4,plq5,plq6 = msg.position[0],msg.position[1],msg.position[2],msg.position[3],msg.position[4],msg.position[5]
+
+
+
+
+        
+
+
+            nextpoint=[float(plq1),float(plq2),float(plq3),float(plq4),float(plq5),float(plq6)]
+            print("next point trajectory  =", nextpoint)
+            print ("Time =     ", shomarande)
+            self.goal_positions=list(nextpoint)
+            self.timer_callback()
+
+        
+        
+
+
+
+
+
+
+
+
+    def timer_callback(self):
+        
+        bazu_trajectory_msg = JointTrajectory()
+        bazu_trajectory_msg.joint_names = self.joints
+        ## creating a point
+        point = JointTrajectoryPoint()
+
+        point.positions = self.goal_positions
+        point.time_from_start = Duration(sec=1)
+        ## adding newly created point into trajectory message
+        bazu_trajectory_msg.points.append(point)
+        self.trajectory_publihser.publish(bazu_trajectory_msg)
+        print("\n Trajectory Sent !\n")
+    
+
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    joint_trajectory_object = Trajectory_publisher()
+
+    rclpy.spin(joint_trajectory_object)
+    joint_trajectory_object.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
