@@ -55,7 +55,7 @@ class Trajectory_publisher(Node):
         print("\n Trajectory Sent !\n")
     
     def robot_initialize(self):
-        urdf_file= ("/home/izan/my_ws/src/urdf_example/description/robotros2control.urdf.xacro")
+        urdf_file= ("/home/ahmad/my_ws/src/urdf_example/description/robotros2control.urdf.xacro")
         self.kuka_robot = ikpy.chain.Chain.from_urdf_file(urdf_file)
 
     def get_fk_solution(self):
